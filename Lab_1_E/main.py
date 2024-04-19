@@ -43,28 +43,32 @@ def find_file(name, top_path=DEFAULT_TOP_PATH):
         sys.exit(-1)
 
 
-def find_file_from_stdin():
-    args = get_args_from_lines(get_lines_from_stdin())
-    return find_file(args[0], args[1])
+def processing(args):
+    if isinstance(args, list):
+        file_list = find_file(args[0], args[1])
+        if isinstance(file_list, list):
+            for file in file_list:
+                print(file)
+                return 0
+        else:
+            sys.stderr.write("ERR_Processing_2: No files found")
+            sys.exit(-2)
+    else:
+        sys.stderr.write("ERR_Processing_1: Arguments check failed")
+        sys.exit(-1)
 
+def le_main(input_override = None):
+    if input_override is None:
+        line = input()
+    else:
+        line = input_override
+    if 'Exit' == line.rstrip():
+        sys.exit()
+    args = get_args(line.rstrip())
+    processing(args)
+    return 0
 
 if __name__ == '__main__':
     # main loop
     while True:
-        line = input()
-        if 'Exit' == line.rstrip():
-            break
-        args = get_args(line.rstrip())
-        if isinstance(args, list):
-            file_list = find_file(args[0], args[1])
-            if isinstance(file_list, list):
-                for file in file_list:
-                    print(file)
-            else:
-                sys.stderr.write("ERR_Main_2: No files found")
-                sys.exit(-2)
-        else:
-            sys.stderr.write("ERR_Main_1: Arguments check failed")
-            sys.exit(-1)
-
-    sys.exit()
+        le_main()

@@ -1,6 +1,8 @@
 import unittest
 import main
 import sys
+import os
+import shutil
 
 
 class TestGA(unittest.TestCase):
@@ -44,6 +46,27 @@ class TestGA(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main.get_args(input_string)
         self.assertEqual(main.DEFAULT_TOP_PATH, expected_DTP)
+
+
+class TestFF(unittest.TestCase):
+
+    def test_only_filename(self):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/"+file_name, "w")
+        file.close()
+        self.assertEqual(main.find_file(file_name), ["\\temppp\\gibberishfiiiiiiilleeeeeeeee.file"])
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    def test_filename_and_path(self):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+        self.assertEqual(main.find_file(file_name, "\\temppp"), ["\\temppp\\gibberishfiiiiiiilleeeeeeeee.file"])
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
 
 if __name__ == '__main__':
     unittest.main()
