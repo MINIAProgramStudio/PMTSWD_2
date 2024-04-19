@@ -43,8 +43,9 @@ class TestGA(unittest.TestCase):
         expected_filename = "example.file"
         expected_top_path = "le folder"
         expected_DTP = main.DEFAULT_TOP_PATH
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.get_args(input_string)
+        self.assertEqual(cm.exception.code, -1)
         self.assertEqual(main.DEFAULT_TOP_PATH, expected_DTP)
 
 
@@ -70,8 +71,9 @@ class TestFF(unittest.TestCase):
 
     def test_for_no_such_file(self):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.find_file(file_name)
+        self.assertEqual(cm.exception.code, -1)
 
 class TestProcessing(unittest.TestCase):
 
@@ -86,12 +88,14 @@ class TestProcessing(unittest.TestCase):
 
     def test_for_no_such_file(self):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.processing([file_name, main.DEFAULT_TOP_PATH])
+        self.assertEqual(cm.exception.code, -1)
 
     def test_args_check(self):
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.processing("le_file.file")
+        self.assertEqual(cm.exception.code, -1)
 
 class TestLeMain(unittest.TestCase):
     def test_normal(self):

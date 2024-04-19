@@ -50,9 +50,6 @@ def processing(args):
             for file in file_list:
                 print(file)
                 return 0
-        else:
-            sys.stderr.write("ERR_Processing_2: No files found")
-            sys.exit(-2)
     else:
         sys.stderr.write("ERR_Processing_1: Arguments check failed")
         sys.exit(-1)
