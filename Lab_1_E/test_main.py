@@ -73,7 +73,25 @@ class TestFF(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main.find_file(file_name)
 
+class TestProcessing(unittest.TestCase):
 
+    def test_zero(self):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+        self.assertEqual(main.processing([file_name, "\\temppp"]), 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    def test_for_no_such_file(self):
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        with self.assertRaises(SystemExit):
+            main.processing([file_name, main.DEFAULT_TOP_PATH])
+
+    def test_args_check(self):
+        with self.assertRaises(SystemExit):
+            main.processing("le_file.file")
 
 if __name__ == '__main__':
     unittest.main()
