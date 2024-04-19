@@ -93,5 +93,19 @@ class TestProcessing(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main.processing("le_file.file")
 
+class TestLeMain(unittest.TestCase):
+    def test_normal(self):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+        self.assertEqual(main.le_main(file_name), 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    def test_exit(self):
+        with self.assertRaises(SystemExit):
+            main.le_main("Exit")
+
 if __name__ == '__main__':
     unittest.main()
