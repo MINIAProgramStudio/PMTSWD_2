@@ -69,6 +69,5 @@ def le_main(input_override = None):
     return 0
 
 if __name__ == '__main__':
-    # main loop
-    while True:
-        le_main()
+    le_main()
+    sys.exit(0)
