@@ -3,7 +3,7 @@ import sys
 
 
 
-DEFAULT_TOP_PATH = "\\"
+DEFAULT_TOP_PATH = "С:\\"
 
 def get_args(recived_input_line):
     global DEFAULT_TOP_PATH
