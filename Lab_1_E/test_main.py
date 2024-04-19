@@ -116,9 +116,6 @@ class TestLeMain(unittest.TestCase):
 
 class TestMAIN(unittest.TestCase):
 
-    def begin(self):
-        assert main.raw_input is __builtins__.raw_input
-
     @patch('sys.stderr.write')
     @patch('builtins.print')
     @patch('builtins.input', side_effect=['gibberishfiiiiiiilleeeeeeeee.file'])
@@ -136,8 +133,57 @@ class TestMAIN(unittest.TestCase):
         os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
         os.rmdir("/temppp")
 
-    def end(self):
-        assert main.raw_input is __builtins__.raw_input
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file;'])
+    def test_file_flag(self,_,mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "C:\\temppp\\" + file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code, 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f faultygibberishfiiiiiiilleeeeeeeee.file;'])
+    def test_faulty_filename(self, _, mock_out, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        self.assertEqual(cm.exception.code, -1)
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\temppp'])
+    def test_file_and_path_flag(self, _, mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "C:\\temppp\\" + file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code, 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\tempppfaulty'])
+    def test_file_and_faulty_path_flag(self, _, mock_out, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        self.assertEqual(cm.exception.code, -1)
+
+
 
 if __name__ == '__main__':
     unittest.main()
