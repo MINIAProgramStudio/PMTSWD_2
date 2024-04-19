@@ -60,11 +60,10 @@ def le_main(input_override = None):
     else:
         line = input_override
     if 'Exit' == line.rstrip():
-        sys.exit()
+        sys.exit(0)
     args = get_args(line.rstrip())
     processing(args)
-    return 0
+    sys.exit(0)
 
 if __name__ == '__main__':
     le_main()
-    sys.exit(0)

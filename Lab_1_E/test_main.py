@@ -1,8 +1,8 @@
+import os
 import unittest
 import main
-import sys
-import os
-import shutil
+from unittest.mock import patch
+import io
 
 
 class TestGA(unittest.TestCase):
@@ -103,13 +103,41 @@ class TestLeMain(unittest.TestCase):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
         file = open("/temppp/" + file_name, "w")
         file.close()
-        self.assertEqual(main.le_main(file_name), 0)
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main(file_name)
+        self.assertEqual(cm.exception.code, 0)
         os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
         os.rmdir("/temppp")
 
     def test_exit(self):
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.le_main("Exit")
+        self.assertEqual(cm.exception.code, 0)
+
+class TestMAIN(unittest.TestCase):
+
+    def begin(self):
+        assert main.raw_input is __builtins__.raw_input
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['gibberishfiiiiiiilleeeeeeeee.file'])
+    def test_raw_file_path(self,_,mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "C:\\temppp\\"+file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code,0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    def end(self):
+        assert main.raw_input is __builtins__.raw_input
 
 if __name__ == '__main__':
     unittest.main()
