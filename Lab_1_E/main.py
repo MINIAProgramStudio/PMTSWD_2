@@ -2,6 +2,7 @@ import os
 import sys
 
 
+
 DEFAULT_TOP_PATH = "\\"
 
 def get_args(recived_input_line):
@@ -40,7 +41,6 @@ def find_file(name, top_path=DEFAULT_TOP_PATH):
     else:
         sys.stderr.write("ERR_FF_1: No such file in the directory")
         sys.exit(-1)
-        return -1  # no such file(-s) in the directory
 
 def find_file_from_stdin():
     args = get_args_from_lines(get_lines_from_stdin())
