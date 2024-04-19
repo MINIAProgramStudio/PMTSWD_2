@@ -68,5 +68,12 @@ class TestFF(unittest.TestCase):
         os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
         os.rmdir("/temppp")
 
+    def test_for_no_such_file(self):
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        with self.assertRaises(SystemExit):
+            main.find_file(file_name)
+
+
+
 if __name__ == '__main__':
     unittest.main()
