@@ -25,6 +25,7 @@ def get_args(recived_input_line):
         new_default_top_path = recived_input_line[minus_d+3:recived_input_line.find(';',minus_d)]
         if not os.path.isdir(new_default_top_path):
             sys.stderr.write("ERR_GA_1: New DEFAULT_TOP_PATH is not a valid path")
+            sys.exit(-1)
         else:
             DEFAULT_TOP_PATH = new_default_top_path
     return [file_name,top_path]
@@ -38,6 +39,7 @@ def find_file(name, top_path=DEFAULT_TOP_PATH):
         return return_list
     else:
         sys.stderr.write("ERR_FF_1: No such file in the directory")
+        sys.exit(-1)
         return -1  # no such file(-s) in the directory
 
 def find_file_from_stdin():
@@ -57,8 +59,9 @@ while True:
                 print(file)
         else:
             sys.stderr.write("ERR_Main_2: No files found")
+            sys.exit(-2)
     else:
         sys.stderr.write("ERR_Main_1: Arguments check failed")
-        continue
+        sys.exit(-1)
 
 sys.exit()
