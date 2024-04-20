@@ -157,17 +157,18 @@ class TestMAIN(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             main.le_main()
         self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR_FF_1: No such file in the directory")
 
     @patch('sys.stderr.write')
     @patch('builtins.print')
-    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\temppp'])
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\temppp;'])
     def test_file_and_path_flag(self, _, mock_out, mock_err):
         os.mkdir("/temppp")
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
         file = open("/temppp/" + file_name, "w")
         file.close()
 
-        expected = "C:\\temppp\\" + file_name
+        expected = "\\temppp\\" + file_name
         with self.assertRaises(SystemExit) as cm:
             main.le_main()
         mock_out.assert_called_with(expected)
@@ -182,6 +183,7 @@ class TestMAIN(unittest.TestCase):
         with self.assertRaises(SystemExit) as cm:
             main.le_main()
         self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR_Processing_1: Arguments check failed")
 
 
 
