@@ -1,8 +1,8 @@
+import os
 import unittest
 import main
-import sys
-import os
-import shutil
+from unittest.mock import patch
+import io
 
 
 class TestGA(unittest.TestCase):
@@ -43,8 +43,9 @@ class TestGA(unittest.TestCase):
         expected_filename = "example.file"
         expected_top_path = "le folder"
         expected_DTP = main.DEFAULT_TOP_PATH
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.get_args(input_string)
+        self.assertEqual(cm.exception.code, -1)
         self.assertEqual(main.DEFAULT_TOP_PATH, expected_DTP)
 
 
@@ -70,8 +71,9 @@ class TestFF(unittest.TestCase):
 
     def test_for_no_such_file(self):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.find_file(file_name)
+        self.assertEqual(cm.exception.code, -1)
 
 class TestProcessing(unittest.TestCase):
 
@@ -86,12 +88,14 @@ class TestProcessing(unittest.TestCase):
 
     def test_for_no_such_file(self):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.processing([file_name, main.DEFAULT_TOP_PATH])
+        self.assertEqual(cm.exception.code, -1)
 
     def test_args_check(self):
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.processing("le_file.file")
+        self.assertEqual(cm.exception.code, -1)
 
 class TestLeMain(unittest.TestCase):
     def test_normal(self):
@@ -99,13 +103,89 @@ class TestLeMain(unittest.TestCase):
         file_name = "gibberishfiiiiiiilleeeeeeeee.file"
         file = open("/temppp/" + file_name, "w")
         file.close()
-        self.assertEqual(main.le_main(file_name), 0)
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main(file_name)
+        self.assertEqual(cm.exception.code, 0)
         os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
         os.rmdir("/temppp")
 
     def test_exit(self):
-        with self.assertRaises(SystemExit):
+        with self.assertRaises(SystemExit) as cm:
             main.le_main("Exit")
+        self.assertEqual(cm.exception.code, 0)
+
+class TestMAIN(unittest.TestCase):
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['gibberishfiiiiiiilleeeeeeeee.file'])
+    def test_raw_file_path(self,_,mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "C:\\temppp\\"+file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code,0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file;'])
+    def test_file_flag(self,_,mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "C:\\temppp\\" + file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code, 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f faultygibberishfiiiiiiilleeeeeeeee.file;'])
+    def test_faulty_filename(self, _, mock_out, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR_FF_1: No such file in the directory")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\temppp;'])
+    def test_file_and_path_flag(self, _, mock_out, mock_err):
+        os.mkdir("/temppp")
+        file_name = "gibberishfiiiiiiilleeeeeeeee.file"
+        file = open("/temppp/" + file_name, "w")
+        file.close()
+
+        expected = "\\temppp\\" + file_name
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        mock_out.assert_called_with(expected)
+        self.assertEqual(cm.exception.code, 0)
+        os.remove("/temppp/gibberishfiiiiiiilleeeeeeeee.file")
+        os.rmdir("/temppp")
+
+    @patch('sys.stderr.write')
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['-f gibberishfiiiiiiilleeeeeeeee.file; -p \\tempppfaulty'])
+    def test_file_and_faulty_path_flag(self, _, mock_out, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            main.le_main()
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR_Processing_1: Arguments check failed")
+
+
 
 if __name__ == '__main__':
     unittest.main()

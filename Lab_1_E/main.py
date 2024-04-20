@@ -51,8 +51,8 @@ def processing(args):
                 print(file)
                 return 0
         else:
-            sys.stderr.write("ERR_Processing_2: No files found")
-            sys.exit(-2)
+            sys.stderr.write("ERR_Processing_2: Not a list")
+            sys.exit(-1)
     else:
         sys.stderr.write("ERR_Processing_1: Arguments check failed")
         sys.exit(-1)
@@ -63,11 +63,10 @@ def le_main(input_override = None):
     else:
         line = input_override
     if 'Exit' == line.rstrip():
-        sys.exit()
+        sys.exit(0)
     args = get_args(line.rstrip())
     processing(args)
-    return 0
+    sys.exit(0)
 
 if __name__ == '__main__':
     le_main()
-    sys.exit(0)
