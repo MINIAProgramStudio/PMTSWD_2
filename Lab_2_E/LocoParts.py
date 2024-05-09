@@ -55,6 +55,24 @@ class Transmission:
 
 class Wheels:
     def __init__(self, axels_count: int, radius: int, mass: int):
+        if not isinstance(axels_count, int):
+            sys.stderr.write("ERR: axels_count must be int")
+            exit(-1)
+        if not axels_count >= 2:
+            sys.stderr.write("ERR: axels_count must be greater or equal to 2")
+            exit(-1)
+        if not isinstance(radius, int):
+            sys.stderr.write("ERR: radius must be int")
+            exit(-1)
+        if not radius <= 0:
+            sys.stderr.write("ERR: radius must be positive")
+            exit(-1)
+        if not isinstance(mass, int):
+            sys.stderr.write("ERR: mass must be int")
+            exit(-1)
+        if mass <= 0:
+            sys.stderr.write("ERR: mass must be positive")
+            exit(-1)
         self.axels_count = axels_count
         self.radius = radius
         self.mass = mass
@@ -64,7 +82,19 @@ class Wheels:
 
 
 class Cab:
-    def __init__(self, colour, mass):
+    def __init__(self, colour: str, mass: int):
+        if not isinstance(colour, str):
+            sys.stderr.write("ERR: axels_count must be str")
+            exit(-1)
+        if not colour == "black":
+            sys.stderr.write("ERR: car may be painted in any color if the color is black (c) H. Ford")
+            exit(-1)
+        if not isinstance(mass, int):
+            sys.stderr.write("ERR: mass must be int")
+            exit(-1)
+        if mass <= 0:
+            sys.stderr.write("ERR: mass must be positive")
+            exit(-1)
         self.colour = colour
         self.mass = mass
 
