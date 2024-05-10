@@ -1,8 +1,8 @@
-import os
 import unittest
 import main
 from unittest.mock import patch
 import LocoParts
+from Locomotive import Locomotive
 
 
 class TestLocoPartsEngine(unittest.TestCase):
@@ -137,6 +137,7 @@ class TestLocoPartsWheels(unittest.TestCase):
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: radius must be positive")
 
+
 class TestLocoPartsCab(unittest.TestCase):
     def test_positive(self):
         cab = LocoParts.Cab("black", 1000)
@@ -170,3 +171,74 @@ class TestLocoPartsCab(unittest.TestCase):
             LocoParts.Cab("red, +10 to the agility", 100)
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: car may be painted in any color if the color is black (c) H. Ford")
+
+
+class TestLocomotive(unittest.TestCase):
+    def test_init_positive(self):
+        loco = Locomotive("УЗ", "Гр-336")
+        self.assertEqual(loco.owner, "УЗ")
+        self.assertEqual(loco.name, "Гр-336")
+
+    @patch('sys.stderr.write')
+    def test_init_owner_invalid_type(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            Locomotive(10, "Гр-336")
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: owner must be str")
+
+    @patch('sys.stderr.write')
+    def test_init_name_invalid_type(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            Locomotive("УЗ", 336)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: name must be str")
+
+    locomotive = Locomotive("УЗ", "М62")
+
+    def test_set_engine_positive(self):
+        engine = LocoParts.Engine(100, 100, 100)
+        self.locomotive.set_engine(engine)
+        self.assertEqual(self.locomotive.engine, engine)
+
+    @patch('sys.stderr.write')
+    def test_set_engine_negative(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            self.locomotive.set_engine("that's not an engine")
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: engine must be Engine")
+
+    def test_set_transmission_positive(self):
+        transmission = LocoParts.Transmission(10.0, 100)
+        self.locomotive.set_transmission(transmission)
+        self.assertEqual(self.locomotive.transmission, transmission)
+
+    @patch('sys.stderr.write')
+    def test_set_transmission_negative(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            self.locomotive.set_transmission("still not an engine")
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: transmission must be Transmission")
+
+    def test_set_wheels_positive(self):
+        wheels = LocoParts.Wheels(6, 1000, 1000)
+        self.locomotive.set_wheels(wheels)
+        self.assertEqual(self.locomotive.wheels, wheels)
+
+    @patch('sys.stderr.write')
+    def test_set_wheels_negative(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            self.locomotive.set_wheels("definately not an engine")
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: wheels must be Wheels")
+
+    def test_set_cab_positive(self):
+        cab = LocoParts.Cab("black", 1000)
+        self.locomotive.set_cab(cab)
+        self.assertEqual(self.locomotive.cab, cab)
+
+    @patch('sys.stderr.write')
+    def test_set_cab_negative(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            self.locomotive.set_cab("WILL YOU GIVE ME THE ENGINE?!")
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: cab must be Cab")
