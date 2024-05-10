@@ -67,3 +67,17 @@ class TestLocoPartsTransmission(unittest.TestCase):
             LocoParts.Transmission(1000.0, 0)
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: mass must be positive")
+
+    @patch('sys.stderr.write')
+    def test_resistance_force_invalid_type(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            LocoParts.Transmission(10, 1000)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: resistance_force must be float")
+
+    @patch('sys.stderr.write')
+    def test_resistance_force_invalid_value(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            LocoParts.Transmission(-1.0, 100)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: resistance_force must be positive or zero")
