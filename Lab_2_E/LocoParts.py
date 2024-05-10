@@ -64,7 +64,7 @@ class Wheels:
         if not isinstance(radius, int):
             sys.stderr.write("ERR: radius must be int")
             exit(-1)
-        if not radius <= 0:
+        if radius <= 0:
             sys.stderr.write("ERR: radius must be positive")
             exit(-1)
         if not isinstance(mass, int):

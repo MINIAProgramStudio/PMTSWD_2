@@ -1,6 +1,6 @@
-
 from Directors import *
 
-loco = ChME_3.construct()
+director = ChME_3()
+loco = director.construct()
 
-print(loco)
+print(str(loco))

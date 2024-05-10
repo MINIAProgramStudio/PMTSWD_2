@@ -37,15 +37,20 @@ class LocomotiveBuilder(EmptyLocomotiveBuilder):
         self.locomotive.set_cab(cab)
 
     def check(self):
-        if not "self.locomotive" in locals():
+        if not hasattr(self, "locomotive"):
+            print(1)
             return False
-        if not "self.locomotive.engine" in locals():
+        if not hasattr(self.locomotive, "engine"):
+            print(2)
             return False
-        if not "self.locomotive.transmission" in locals():
+        if not hasattr(self.locomotive, "transmission"):
+            print(3)
             return False
-        if not "self.locomotive.wheels" in locals():
+        if not hasattr(self.locomotive, "wheels"):
+            print(4)
             return False
-        if not "self.locomotive.cab" in locals():
+        if not hasattr(self.locomotive, "cab"):
+            print(5)
             return False
 
         if not isinstance(self.locomotive.engine, Engine):
