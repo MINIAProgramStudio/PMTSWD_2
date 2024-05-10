@@ -22,6 +22,9 @@ class EmptyLocomotiveBuilder:
 
 class LocomotiveBuilder(EmptyLocomotiveBuilder):
     def set_locomotive(self, locomotive: Locomotive):
+        if not isinstance(locomotive, Locomotive):
+            sys.stderr.write("ERR: locomotive must be Locomotive")
+            exit(-1)
         self.locomotive = locomotive
 
     def set_engine(self, engine: Engine):
@@ -38,19 +41,14 @@ class LocomotiveBuilder(EmptyLocomotiveBuilder):
 
     def check(self):
         if not hasattr(self, "locomotive"):
-            print(1)
             return False
         if not hasattr(self.locomotive, "engine"):
-            print(2)
             return False
         if not hasattr(self.locomotive, "transmission"):
-            print(3)
             return False
         if not hasattr(self.locomotive, "wheels"):
-            print(4)
             return False
         if not hasattr(self.locomotive, "cab"):
-            print(5)
             return False
 
         if not isinstance(self.locomotive.engine, Engine):

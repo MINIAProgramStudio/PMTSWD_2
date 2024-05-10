@@ -3,6 +3,7 @@ import main
 from unittest.mock import patch
 import LocoParts
 from Locomotive import Locomotive
+from LocomotiveBuilder import *
 
 
 class TestLocoPartsEngine(unittest.TestCase):
@@ -174,6 +175,8 @@ class TestLocoPartsCab(unittest.TestCase):
 
 
 class TestLocomotive(unittest.TestCase):
+    locomotive = Locomotive("УЗ", "М62")
+
     def test_init_positive(self):
         loco = Locomotive("УЗ", "Гр-336")
         self.assertEqual(loco.owner, "УЗ")
@@ -192,8 +195,6 @@ class TestLocomotive(unittest.TestCase):
             Locomotive("УЗ", 336)
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: name must be str")
-
-    locomotive = Locomotive("УЗ", "М62")
 
     def test_set_engine_positive(self):
         engine = LocoParts.Engine(100, 100, 100)
@@ -242,3 +243,96 @@ class TestLocomotive(unittest.TestCase):
             self.locomotive.set_cab("WILL YOU GIVE ME THE ENGINE?!")
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: cab must be Cab")
+
+    def test_locomotive(self):
+        pass
+
+    @patch("sys.stdout.write")
+    def test_choochoo(self, mock_print):
+        self.locomotive.choochoo()
+        mock_print.assert_called_with(
+            "Dear nearby humans, please, be aware of 3000 tons of steel rolling in your general direction.")
+
+    def test_mass(self):
+        self.locomotive = Locomotive("УЗ", "М62")
+        engine = LocoParts.Engine(100, 100, 100)
+        self.locomotive.set_engine(engine)
+        transmission = LocoParts.Transmission(10.0, 100)
+        self.locomotive.set_transmission(transmission)
+        wheels = LocoParts.Wheels(6, 1000, 1000)
+        cab = LocoParts.Cab("black", 1000)
+        self.locomotive.set_cab(cab)
+        self.locomotive.set_wheels(wheels)
+        self.assertEqual(self.locomotive.get_total_mass(), sum([i.mass for i in
+                                                                [self.locomotive.engine, self.locomotive.wheels,
+                                                                 self.locomotive.transmission, self.locomotive.cab]]))
+
+    def test_axel_load(self):
+        self.locomotive = Locomotive("УЗ", "М62")
+        engine = LocoParts.Engine(100, 100, 100)
+        self.locomotive.set_engine(engine)
+        transmission = LocoParts.Transmission(10.0, 100)
+        self.locomotive.set_transmission(transmission)
+        wheels = LocoParts.Wheels(6, 1000, 1000)
+        cab = LocoParts.Cab("black", 1000)
+        self.locomotive.set_cab(cab)
+        self.locomotive.set_wheels(wheels)
+        mass = sum([i.mass for i in [self.locomotive.engine, self.locomotive.wheels, self.locomotive.transmission,
+                                     self.locomotive.cab]])
+        self.assertEqual(self.locomotive.get_axel_load(), mass/self.locomotive.wheels.axels_count)
+
+class TestBuilder(unittest.TestCase):
+    def test_positive(self):
+        """
+        builder = LocomotiveBuilder()
+        builder.set_locomotive(Locomotive("УЗ", "М62"))
+        builder.set_engine(LocoParts.Engine(100, 100, 100))
+        builder.set_transmission(LocoParts.Transmission(10.0, 100))
+        builder.set_wheels(LocoParts.Wheels(6, 1000, 1000))
+        builder.set_cab(LocoParts.Cab("black", 1000))
+
+        self.assertEqual(str(locomotive), text)
+        """
+        pass
+
+    @patch('sys.stderr.write')
+    def test_locomotive_invalid_type(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            l = LocomotiveBuilder()
+            l.set_locomotive(1)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: locomotive must be Locomotive")
+
+    def test_check_positive(self):
+        l = LocomotiveBuilder()
+        l.set_locomotive(Locomotive("УЗ", "М62"))
+        l.set_engine(LocoParts.Engine(100, 100, 100))
+        l.set_transmission(LocoParts.Transmission(10.0, 100))
+        l.set_wheels(LocoParts.Wheels(6, 1000, 1000))
+        l.set_cab(LocoParts.Cab("black", 1000))
+
+        self.assertEqual(l.check(), True)
+
+    def test_check_negative(self):
+        for i in range(5):
+            l = LocomotiveBuilder()
+            l.set_locomotive(Locomotive("УЗ", "М62"))
+            match i:
+                case 0:
+                    pass
+                case 1:
+                    l.set_engine(LocoParts.Engine(100, 100, 100))
+                case 2:
+                    l.set_transmission(LocoParts.Transmission(10.0, 100))
+                case 3:
+                    l.set_wheels(LocoParts.Wheels(6, 1000, 1000))
+                case 4:
+                    l.set_cab(LocoParts.Cab("black", 1000))
+
+            l.set_engine(LocoParts.Engine(100, 100, 100))
+            self.assertEqual(l.check(), False)
+
+    def test_negative(self):
+        l = LocomotiveBuilder()
+        l.set_locomotive(Locomotive("УЗ", "М62"))
+        self.assertEqual(l.get_locomotive(), -1)

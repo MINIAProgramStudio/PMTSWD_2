@@ -45,7 +45,7 @@ class Locomotive:
         return self.get_total_mass() / self.wheels.axels_count
 
     def choochoo(self):
-        print("Dear nearby humans, please, be aware of 3000 tons of steel rolling in your general direction.")
+        sys.stdout.write('Dear nearby humans, please, be aware of 3000 tons of steel rolling in your general direction.')
 
     def __str__(self):
         return f"""{self.owner}'s {self.name} locomotive that:
