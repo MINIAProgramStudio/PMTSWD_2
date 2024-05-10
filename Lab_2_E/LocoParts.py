@@ -1,4 +1,6 @@
 import sys
+
+
 class Engine:
     def __init__(self, power: int, fuel_consumption: int, mass: int):
         if not isinstance(power, int):

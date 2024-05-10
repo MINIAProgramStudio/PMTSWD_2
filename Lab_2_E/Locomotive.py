@@ -1,12 +1,13 @@
 from LocoParts import *
 import sys
 
+
 class Locomotive:
     def __init__(self, owner: str, name: str):
-        if not isinstance(owner,str):
+        if not isinstance(owner, str):
             sys.stderr.write("ERR: owner must be str")
             exit(-1)
-        if not isinstance(name,str):
+        if not isinstance(name, str):
             sys.stderr.write("ERR: name must be str")
             exit(-1)
         self.owner = owner
