@@ -1,12 +1,13 @@
 from LocoParts import *
 import sys
 
+
 class Locomotive:
     def __init__(self, owner: str, name: str):
-        if not isinstance(owner,str):
+        if not isinstance(owner, str):
             sys.stderr.write("ERR: owner must be str")
             exit(-1)
-        if not isinstance(name,str):
+        if not isinstance(name, str):
             sys.stderr.write("ERR: name must be str")
             exit(-1)
         self.owner = owner
@@ -44,9 +45,13 @@ class Locomotive:
         return self.get_total_mass() / self.wheels.axels_count
 
     def choochoo(self):
-        print("Dear nearby humans, please, be aware of 3000 tons of steel rolling in your general direction.")
+        sys.stdout.write('Dear nearby humans, please, be aware of 3000 tons of steel rolling in your general direction.')
 
     def __str__(self):
         return f"""{self.owner}'s {self.name} locomotive that:
-    weighs {self.get_total_mass()}Kg 
-    has {int(self.get_axel_load())}Kg axel load"""
+    weighs {self.get_total_mass()}Kg;
+    has {int(self.get_axel_load())}Kg axel load;
+    has a {self.engine};
+    has a {self.transmission}.
+Locomotive's {self.wheels}.
+Locomotive's {self.cab}."""
