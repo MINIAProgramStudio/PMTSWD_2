@@ -1,7 +1,4 @@
-from Directors import *
-
-director = ChME_3()
-loco = director.construct()
-
-print(str(loco))
-loco.choochoo()
+"""
+I don't think that something is supposed to be here so... I'll just leave this Rickroll link here:
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+"""

@@ -1,4 +1,6 @@
 import unittest
+
+import Directors
 import main
 from unittest.mock import patch
 import LocoParts
@@ -336,3 +338,13 @@ class TestBuilder(unittest.TestCase):
         l = LocomotiveBuilder()
         l.set_locomotive(Locomotive("УЗ", "М62"))
         self.assertEqual(l.get_locomotive(), -1)
+
+class TestDirectors(unittest.TestCase):
+    def test(self):
+        return
+        self.assertEqual(str(Directors.ChME_3.construct()), "")
+
+class TestMain(unittest.TestCase):
+    def test(self):
+        pass
+        """uh... I do not know how to test for emptyness..."""
