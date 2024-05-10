@@ -247,7 +247,22 @@ class TestLocomotive(unittest.TestCase):
         mock_err.assert_called_with("ERR: cab must be Cab")
 
     def test_locomotive(self):
-        pass
+        self.locomotive = Locomotive("УЗ", "М62")
+        engine = LocoParts.Engine(100, 100, 100)
+        self.locomotive.set_engine(engine)
+        transmission = LocoParts.Transmission(10.0, 100)
+        self.locomotive.set_transmission(transmission)
+        wheels = LocoParts.Wheels(6, 1000, 1000)
+        cab = LocoParts.Cab("black", 1000)
+        self.locomotive.set_cab(cab)
+        self.locomotive.set_wheels(wheels)
+        self.assertEqual(str(self.locomotive),f"""УЗ's М62 locomotive that:
+    weighs {self.locomotive.get_total_mass()}Kg;
+    has {int(self.locomotive.get_axel_load())}Kg axel load;
+    has a {engine};
+    has a {transmission}.
+Locomotive's {wheels}.
+Locomotive's {cab}.""")
 
     @patch("sys.stdout.write")
     def test_choochoo(self, mock_print):
@@ -285,17 +300,21 @@ class TestLocomotive(unittest.TestCase):
 
 class TestBuilder(unittest.TestCase):
     def test_positive(self):
-        """
+
         builder = LocomotiveBuilder()
         builder.set_locomotive(Locomotive("УЗ", "М62"))
         builder.set_engine(LocoParts.Engine(100, 100, 100))
         builder.set_transmission(LocoParts.Transmission(10.0, 100))
         builder.set_wheels(LocoParts.Wheels(6, 1000, 1000))
         builder.set_cab(LocoParts.Cab("black", 1000))
-
-        self.assertEqual(str(locomotive), text)
-        """
-        pass
+        self.locomotive = builder.get_locomotive()
+        self.assertEqual(str(self.locomotive), f"""УЗ's М62 locomotive that:
+    weighs {int(self.locomotive.get_total_mass())}Kg;
+    has {int(self.locomotive.get_axel_load())}Kg axel load;
+    has a {LocoParts.Engine(100, 100, 100)};
+    has a {LocoParts.Transmission(10.0, 100)}.
+Locomotive's {LocoParts.Wheels(6, 1000, 1000)}.
+Locomotive's {LocoParts.Cab("black", 1000)}.""")
 
     @patch('sys.stderr.write')
     def test_locomotive_invalid_type(self, mock_err):
@@ -341,8 +360,14 @@ class TestBuilder(unittest.TestCase):
 
 class TestDirectors(unittest.TestCase):
     def test(self):
-        return
-        self.assertEqual(str(Directors.ChME_3.construct()), "")
+        director = Directors.ChME_3()
+        self.assertEqual(str(director.construct()), f"""УЗ's ЧМЕ-3 locomotive that:
+    weighs 100000Kg;
+    has 16666Kg axel load;
+    has a {Engine(1012500, 100, 60 * 10 ** 3)};
+    has a {Transmission(100.0, 20 * 10 ** 3)}.
+Locomotive's {Wheels(6, 1000, 10 * 10 ** 3)}.
+Locomotive's {Cab("black", 10 * 10 ** 3)}.""")
 
 class TestMain(unittest.TestCase):
     def test(self):

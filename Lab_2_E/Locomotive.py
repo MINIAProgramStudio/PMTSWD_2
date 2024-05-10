@@ -49,5 +49,9 @@ class Locomotive:
 
     def __str__(self):
         return f"""{self.owner}'s {self.name} locomotive that:
-    weighs {self.get_total_mass()}Kg 
-    has {int(self.get_axel_load())}Kg axel load"""
+    weighs {self.get_total_mass()}Kg;
+    has {int(self.get_axel_load())}Kg axel load;
+    has a {self.engine};
+    has a {self.transmission}.
+Locomotive's {self.wheels}.
+Locomotive's {self.cab}."""
