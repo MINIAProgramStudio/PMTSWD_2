@@ -1,21 +1,39 @@
 from LocoParts import *
-
+import sys
 
 class Locomotive:
     def __init__(self, owner: str, name: str):
+        if not isinstance(owner,str):
+            sys.stderr.write("ERR: owner must be str")
+            exit(-1)
+        if not isinstance((name,str)):
+            sys.stderr.write("ERR: name must be str")
+            exit(-1)
         self.owner = owner
         self.name = name
 
     def set_engine(self, engine: Engine):
+        if not isinstance(engine, Engine):
+            sys.stderr.write("ERR: engine must be Engine")
+            exit(-1)
         self.engine = engine
 
     def set_transmission(self, transmission: Transmission):
+        if not isinstance(transmission, Transmission):
+            sys.stderr.write("ERR: transmission must be Transmission")
+            exit(-1)
         self.transmission = transmission
 
     def set_wheels(self, wheels: Wheels):
+        if not isinstance(wheels, Wheels):
+            sys.stderr.write("ERR: wheels must be Wheels")
+            exit(-1)
         self.wheels = wheels
 
     def set_cab(self, cab: Cab):
+        if not isinstance(cab, Cab):
+            sys.stderr.write("ERR: cab must be Cab")
+            exit(-1)
         self.cab = cab
 
     def get_total_mass(self) -> int:
