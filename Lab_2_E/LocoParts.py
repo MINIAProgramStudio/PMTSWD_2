@@ -32,9 +32,6 @@ class Engine:
 
 class Transmission:
     def __init__(self, resistance_force: float, mass: int):
-        if isinstance(resistance_force, int):
-            resistance_force = float(resistance_force)
-            sys.stderr.write("WARN: resistance_force should be float")
         if not isinstance(resistance_force, float):
             sys.stderr.write("ERR: resistance_force must be float")
             exit(-1)

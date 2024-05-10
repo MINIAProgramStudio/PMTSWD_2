@@ -52,3 +52,18 @@ class TestLocoPartsEngine(unittest.TestCase):
             LocoParts.Engine(10000, 100, 0)
         self.assertEqual(cm.exception.code, -1)
         mock_err.assert_called_with("ERR: mass must be positive")
+
+class TestLocoPartsTransmission(unittest.TestCase):
+    @patch('sys.stderr.write')
+    def test_mass_invalid_type(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            LocoParts.Transmission(1000.0, 100.0)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: mass must be int")
+
+    @patch('sys.stderr.write')
+    def test_mass_invalid_value(self, mock_err):
+        with self.assertRaises(SystemExit) as cm:
+            LocoParts.Transmission(1000.0, 0)
+        self.assertEqual(cm.exception.code, -1)
+        mock_err.assert_called_with("ERR: mass must be positive")
