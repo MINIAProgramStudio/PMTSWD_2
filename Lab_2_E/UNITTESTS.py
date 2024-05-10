@@ -256,7 +256,7 @@ class TestLocomotive(unittest.TestCase):
         cab = LocoParts.Cab("black", 1000)
         self.locomotive.set_cab(cab)
         self.locomotive.set_wheels(wheels)
-        self.assertEqual(str(self.locomotive),f"""УЗ's М62 locomotive that:
+        self.assertEqual(str(self.locomotive), f"""УЗ's М62 locomotive that:
     weighs {self.locomotive.get_total_mass()}Kg;
     has {int(self.locomotive.get_axel_load())}Kg axel load;
     has a {engine};
@@ -296,7 +296,8 @@ Locomotive's {cab}.""")
         self.locomotive.set_wheels(wheels)
         mass = sum([i.mass for i in [self.locomotive.engine, self.locomotive.wheels, self.locomotive.transmission,
                                      self.locomotive.cab]])
-        self.assertEqual(self.locomotive.get_axel_load(), mass/self.locomotive.wheels.axels_count)
+        self.assertEqual(self.locomotive.get_axel_load(), mass / self.locomotive.wheels.axels_count)
+
 
 class TestBuilder(unittest.TestCase):
     def test_positive(self):
@@ -358,6 +359,7 @@ Locomotive's {LocoParts.Cab("black", 1000)}.""")
         l.set_locomotive(Locomotive("УЗ", "М62"))
         self.assertEqual(l.get_locomotive(), -1)
 
+
 class TestDirectors(unittest.TestCase):
     def test(self):
         director = Directors.ChME_3()
@@ -368,6 +370,7 @@ class TestDirectors(unittest.TestCase):
     has a {Transmission(100.0, 20 * 10 ** 3)}.
 Locomotive's {Wheels(6, 1000, 10 * 10 ** 3)}.
 Locomotive's {Cab("black", 10 * 10 ** 3)}.""")
+
 
 class TestMain(unittest.TestCase):
     def test(self):
