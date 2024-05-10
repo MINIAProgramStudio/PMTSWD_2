@@ -35,7 +35,6 @@ class Transmission:
         if not isinstance(resistance_force, float):
             sys.stderr.write("ERR: resistance_force must be float")
             exit(-1)
-
         if resistance_force < 0:
             sys.stderr.write("ERR: resistance_force must be positive or zero")
             exit(-1)
@@ -83,7 +82,7 @@ class Wheels:
 class Cab:
     def __init__(self, colour: str, mass: int):
         if not isinstance(colour, str):
-            sys.stderr.write("ERR: axels_count must be str")
+            sys.stderr.write("ERR: color must be str")
             exit(-1)
         if not colour == "black":
             sys.stderr.write("ERR: car may be painted in any color if the color is black (c) H. Ford")
