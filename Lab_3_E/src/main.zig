@@ -6,11 +6,11 @@ const ExampleObject = struct {
 
 fn change_by_value_type(input_object: ExampleObject) ExampleObject {
     var temp_object = input_object;
-    temp_object.value = temp_object.value + 10;
+    temp_object.value += 10;
     return temp_object;
 }
 
-fn change_by_reference_type(input_object: *ExampleObject) *ExampleObject {
+fn change_by_reference_type(input_object: *ExampleObject) void {
     input_object.value += 10;
 }
 
@@ -23,11 +23,16 @@ pub fn main() !void {
     var original_instance = ExampleObject{ .value = 0 };
     var changed_value_type = change_by_value_type(original_instance);
 
-    try stdout.print("{}\n", .{original_instance.value}); // хотів щоб виводило українською, але Zig іншої думки про це
-    try stdout.print("{}\n", .{changed_value_type.value});
-    try bw.flush(); // за собою необхідно змивати! (:
+    try stdout.print("Original value after value type change: {}\n", .{original_instance.value}); // Output: 0
+    try stdout.print("Changed value type: {}\n", .{changed_value_type.value}); // Output: 10
 
-    // я не знаю чому, але це потрібно щоб воно компілювалось :/
+    // Демонстрація reference type
+    change_by_reference_type(&original_instance);
+    try stdout.print("Original value after reference type change: {}\n", .{original_instance.value}); // Output: 10
+
+    try bw.flush(); // Змиваємось :3
+
+    // Для правильної компіляції потрібно обов'язково змінити усі змінні :/
     original_instance = ExampleObject{ .value = 0 };
     changed_value_type = ExampleObject{ .value = 0 };
 }
