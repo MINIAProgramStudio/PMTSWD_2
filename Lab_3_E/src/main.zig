@@ -45,9 +45,8 @@ test "test create_on_heap" {
 }
 
 test "test create_on_stack" {
-    var stack_instance = create_on_stack();
+    const stack_instance = create_on_stack();
     try std.testing.expectEqual(stack_instance.value, 0); // об'єкт на стеку має бути ініціалізований із значенням 0
-    stack_instance = create_on_stack; // Тому що що? Правильно! Не можна створити змінну і її не змінити у явному для компілятора вигляді
 }
 
 pub fn main() !void {
@@ -63,21 +62,20 @@ pub fn main() !void {
     const heap_instance = try create_on_heap(&allocator);
 
     // Використовуємо ExampleObject на стеку для демонстрації value type
-
     var changed_value_type = change_by_value_type(stack_instance);
     try stdout.print("Stack instance value after value type change: {}\n", .{stack_instance.value}); // Чомусь воно не вміє в кирилицю :(
     try stdout.print("Changed value type: {}\n", .{changed_value_type.value});
 
     // Використовуємо об'єкт на стеку для демонстрації reference type
+    change_by_reference_type(&stack_instance);
 
     // Використовуємо об'єкт на хіпі для демонстрації reference type
-    change_by_reference_type(&stack_instance);
     change_by_reference_type(heap_instance);
     try stdout.print("Stack instance value after reference type change: {}\n", .{stack_instance.value});
     try stdout.print("Heap instance value after reference type change: {}\n", .{heap_instance.value});
     // Вивід результатів
 
-    try bw.flush();
+    try bw.flush(); // Не забуваємо змивати за собою :3
 
     // Зона Чистого четверга
     stack_instance = create_on_stack();
